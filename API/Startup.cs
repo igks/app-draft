@@ -30,10 +30,23 @@ namespace API
         }
 
         public IConfiguration Configuration { get; }
+        readonly string CustomCORS = "_customCORS";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // services.AddCors();
+            services.AddCors(options =>
+                {
+                    options.AddPolicy(name: CustomCORS,
+                                    builder =>
+                                    {
+                                        builder.WithOrigins("http://localhost:3000")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod()
+                                            .AllowCredentials();
+                                    });
+                });
 
             services.AddControllers();
 
@@ -84,6 +97,8 @@ namespace API
                     c.RoutePrefix = "doc";
                 });
             }
+
+            app.UseCors(CustomCORS);
 
             app.UseRouting();
 
