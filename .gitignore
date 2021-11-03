@@ -1,0 +1,5 @@
+.vscode
+/API/bin
+/API/obj
+/spa/node_modules
+/spa/build
