@@ -8,6 +8,7 @@
 //
 //===================================================
 using API.DAL.Interfaces;
+using API.DAL.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace API.Helpers.Mappers
@@ -17,6 +18,7 @@ namespace API.Helpers.Mappers
         public static void Map(IServiceCollection services)
         {
             services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<IAuthRepo, AuthRepo>();
         }
     }
 }
