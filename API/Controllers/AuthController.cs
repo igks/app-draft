@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using API.DAL.Interfaces;
 using API.DTO;
+using API.Models;
 using AutoMapper;
 using CVB.CSI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -53,31 +54,8 @@ namespace API.Controllers
             if (userLogin == null)
                 return BadRequest("Credential invalid or account is unregistered!");
 
-            var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, userLogin.Username));
-            claims.Add(new Claim("Id", userLogin.Id.ToString()));
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(_security.JWTSecretToken));
-
-            var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = credential
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var user = _mapper.Map<UserOutput>(userLogin);
-
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token),
-                user
-            });
+            var result = TokenHandler(userLogin);
+            return Ok(result);
         }
 
         [HttpGet("login-sso")]
@@ -115,6 +93,41 @@ namespace API.Controllers
             }
 
             return Ok();
+        }
+
+        private object TokenHandler(User user)
+        {
+            var userId = user.Id.ToString();
+            var userName = user.Username;
+
+            var claims = new List<Claim>();
+            claims.Add(new Claim("Id", userId));
+            claims.Add(new Claim("Username", userName));
+
+            // Add more claim
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(_security.JWTSecretToken));
+
+            var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var timeExpire = DateTime.Now.AddDays(1);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = timeExpire,
+                SigningCredentials = credential
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var userData = _mapper.Map<UserOutput>(user);
+
+            return new
+            {
+                Token = tokenHandler.WriteToken(token),
+                Expired = timeExpire,
+                user
+            };
         }
     }
 }
