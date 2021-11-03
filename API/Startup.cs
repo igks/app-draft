@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.DAL.Contexts;
+using API.Helpers.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,6 +31,16 @@ namespace API
         {
 
             services.AddControllers();
+
+            // DB context
+            services.AddDbContext<AppDbContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AppDbConnection")));
+
+            // Auto mapper
+            services.AddAutoMapper(typeof(Startup));
+
+            // Map repository
+            InterfaceMapper.Map(services);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -41,7 +54,11 @@ namespace API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+                app.UseSwaggerUI(c =>
+           {
+               c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project Skeleton V1");
+               c.RoutePrefix = "doc";
+           });
             }
 
             app.UseHttpsRedirection();
