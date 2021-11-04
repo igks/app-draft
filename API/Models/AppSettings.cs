@@ -8,7 +8,7 @@
 //                          		        		    
 //===================================================
 
-namespace CVB.CSI.Models
+namespace API.Models
 {
     public class Security
     {
@@ -18,5 +18,12 @@ namespace CVB.CSI.Models
     public class ServerConfig
     {
         public string ADDomain { get; set; }
+    }
+
+    public class SystemConfig
+    {
+        public int Version { get; set; }
+        public bool EnableAuthentication { get; set; }
+        public bool EnableAuthorization { get; set; }
     }
 }

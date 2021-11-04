@@ -1,26 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.DAL.Contexts;
 using API.Helpers.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using CVB.CSI.Models;
 using Microsoft.AspNetCore.Authorization;
 using FluentValidation.AspNetCore;
 using API.Validations;
+using API.Models;
 
 namespace API
 {
@@ -60,6 +53,7 @@ namespace API
             // Add application setting/configuration
             services.Configure<Security>(options => Configuration.GetSection("Security").Bind(options));
             services.Configure<ServerConfig>(options => Configuration.GetSection("ServerConfig").Bind(options));
+            services.Configure<SystemConfig>(options => Configuration.GetSection("SystemConfig").Bind(options));
 
             // Auto mapper
             services.AddAutoMapper(typeof(Startup));

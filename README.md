@@ -11,4 +11,4 @@
 7. Create repository
 8. Create controller
 
-## SAP Side
+## SPA Side

@@ -18,7 +18,6 @@ using API.DAL.Interfaces;
 using API.DTO;
 using API.Models;
 using AutoMapper;
-using CVB.CSI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
