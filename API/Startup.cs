@@ -27,10 +27,8 @@ namespace API
         public IConfiguration Configuration { get; }
         readonly string CustomCORS = "_customCORS";
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // services.AddCors();
             services.AddCors(options =>
                 {
                     options.AddPolicy(name: CustomCORS,
@@ -47,21 +45,16 @@ namespace API
             .AddNewtonsoftJson(option => option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<MasterValidator>());
 
-            // DB context
             services.AddDbContext<AppDbContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AppDbConnection")));
 
-            // Add application setting/configuration
             services.Configure<Security>(options => Configuration.GetSection("Security").Bind(options));
             services.Configure<ServerConfig>(options => Configuration.GetSection("ServerConfig").Bind(options));
             services.Configure<SystemConfig>(options => Configuration.GetSection("SystemConfig").Bind(options));
 
-            // Auto mapper
             services.AddAutoMapper(typeof(Startup));
 
-            // Map repository
             InterfaceMapper.Map(services);
 
-            // JWT security
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -75,14 +68,12 @@ namespace API
                     };
                 });
 
-            // API documentation
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
