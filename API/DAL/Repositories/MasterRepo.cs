@@ -76,7 +76,7 @@ namespace API.DAL.Repositories
             _context.SaveChanges();
         }
 
-        public void Remove(Master master)
+        public void Delete(Master master)
         {
             _context.Remove(master);
             _context.SaveChanges();

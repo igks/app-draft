@@ -80,7 +80,7 @@ namespace API.DAL.Repositories
             _context.SaveChanges();
         }
 
-        public void Remove(User user)
+        public void Delete(User user)
         {
             _context.Remove(user);
             _context.SaveChanges();

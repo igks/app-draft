@@ -121,7 +121,7 @@ namespace API.Controllers
             if (master == null)
                 return NotFound();
 
-            _masterRepo.Remove(master);
+            _masterRepo.Delete(master);
 
             var commonDto = new CommonDto
             {

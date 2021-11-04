@@ -22,6 +22,6 @@ namespace API.DAL.Interfaces
         Task<PageList<Master>> GetPage(MasterParams parameter);
         void Add(Master master);
         void Update(Master master);
-        void Remove(Master master);
+        void Delete(Master master);
     }
 }

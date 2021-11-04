@@ -105,7 +105,7 @@ namespace API.Controllers
             if (user == null)
                 return NotFound();
 
-            _userRepo.Remove(user);
+            _userRepo.Delete(user);
             return Ok(id);
         }
     }

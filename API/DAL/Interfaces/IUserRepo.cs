@@ -22,6 +22,6 @@ namespace API.DAL.Interfaces
         Task<PageList<User>> GetPage(UserParams parameter);
         void Add(User user, string password);
         void Update(User user, string password);
-        void Remove(User user);
+        void Delete(User user);
     }
 }
