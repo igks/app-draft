@@ -19,6 +19,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CVB.CSI.Models;
 using Microsoft.AspNetCore.Authorization;
+using FluentValidation.AspNetCore;
+using API.Validations;
 
 namespace API
 {
@@ -48,7 +50,9 @@ namespace API
                                     });
                 });
 
-            services.AddControllers();
+            services.AddControllers()
+            .AddNewtonsoftJson(option => option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<MasterValidator>());
 
             // DB context
             services.AddDbContext<AppDbContext>(x => x.UseSqlServer(Configuration.GetConnectionString("AppDbConnection")));
