@@ -41,7 +41,7 @@ namespace API.Controllers
             if (user == null)
                 return NotFound();
 
-            var result = _mapper.Map<User, UserOutput>(user);
+            var result = _mapper.Map<User, UserOut>(user);
             return Ok(result);
         }
 
@@ -49,7 +49,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var users = await _userRepo.GetAll();
-            var result = _mapper.Map<IEnumerable<UserOutput>>(users);
+            var result = _mapper.Map<IEnumerable<UserOut>>(users);
             return Ok(result);
         }
 
@@ -57,33 +57,36 @@ namespace API.Controllers
         public async Task<IActionResult> GetPage([FromQuery] UserParams parameter)
         {
             var users = await _userRepo.GetPage(parameter);
-            var result = _mapper.Map<IEnumerable<UserOutput>>(users);
+            var result = _mapper.Map<IEnumerable<UserOut>>(users);
             Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalItems, users.TotalPages);
             return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] UserInput dto)
+        public async Task<IActionResult> Create([FromBody] UserIn dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = _mapper.Map<UserInput, User>(dto);
+            var user = _mapper.Map<UserIn, User>(dto);
             var password = dto.Password;
             _userRepo.Add(user, password);
 
             user = await _userRepo.GetById(user.Id);
-            var result = _mapper.Map<User, UserOutput>(user);
+            var result = _mapper.Map<User, UserOut>(user);
             return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] UserInput dto)
+        public async Task<IActionResult> Update(int id, [FromBody] UserIn dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _userRepo.GetById(dto.Id.Value);
+            if (id != dto.Id.Value)
+                return BadRequest("Id is required!");
+
+            var user = await _userRepo.GetById(id);
             if (user == null)
                 return NotFound();
 
@@ -91,7 +94,7 @@ namespace API.Controllers
             _userRepo.Update(user, dto.Password);
 
             user = await _userRepo.GetById(user.Id);
-            var result = _mapper.Map<User, UserOutput>(user);
+            var result = _mapper.Map<User, UserOut>(user);
             return Ok(result);
         }
 

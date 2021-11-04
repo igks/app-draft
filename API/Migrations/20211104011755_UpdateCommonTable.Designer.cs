@@ -4,14 +4,16 @@ using API.DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211104011755_UpdateCommonTable")]
+    partial class UpdateCommonTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,8 +39,6 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MasterId");
-
                     b.ToTable("Common");
                 });
 
@@ -55,7 +55,7 @@ namespace API.Migrations
                     b.Property<string>("DetailProperty2")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<long>("MasterId")
+                    b.Property<long?>("MasterId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -104,30 +104,15 @@ namespace API.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("API.Models.Common", b =>
-                {
-                    b.HasOne("API.Models.Master", null)
-                        .WithMany("Commons")
-                        .HasForeignKey("MasterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("API.Models.Detail", b =>
                 {
-                    b.HasOne("API.Models.Master", "Master")
+                    b.HasOne("API.Models.Master", null)
                         .WithMany("Details")
-                        .HasForeignKey("MasterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Master");
+                        .HasForeignKey("MasterId");
                 });
 
             modelBuilder.Entity("API.Models.Master", b =>
                 {
-                    b.Navigation("Commons");
-
                     b.Navigation("Details");
                 });
 #pragma warning restore 612, 618

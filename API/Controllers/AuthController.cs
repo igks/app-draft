@@ -104,8 +104,6 @@ namespace API.Controllers
             claims.Add(new Claim("Id", userId));
             claims.Add(new Claim("Username", userName));
 
-            // Add more claim
-
             var key = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes(_security.JWTSecretToken));
 
@@ -120,7 +118,7 @@ namespace API.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var userData = _mapper.Map<UserOutput>(user);
+            var userData = _mapper.Map<UserOut>(user);
 
             return new
             {

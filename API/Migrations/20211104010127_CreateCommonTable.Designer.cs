@@ -4,43 +4,22 @@ using API.DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211104010127_CreateCommonTable")]
+    partial class CreateCommonTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("API.Models.Common", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CommonProperty1")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("CommonProperty2")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<long>("MasterId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MasterId");
-
-                    b.ToTable("Common");
-                });
 
             modelBuilder.Entity("API.Models.Detail", b =>
                 {
@@ -55,7 +34,7 @@ namespace API.Migrations
                     b.Property<string>("DetailProperty2")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<long>("MasterId")
+                    b.Property<long?>("MasterId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -104,30 +83,15 @@ namespace API.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("API.Models.Common", b =>
-                {
-                    b.HasOne("API.Models.Master", null)
-                        .WithMany("Commons")
-                        .HasForeignKey("MasterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("API.Models.Detail", b =>
                 {
-                    b.HasOne("API.Models.Master", "Master")
+                    b.HasOne("API.Models.Master", null)
                         .WithMany("Details")
-                        .HasForeignKey("MasterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Master");
+                        .HasForeignKey("MasterId");
                 });
 
             modelBuilder.Entity("API.Models.Master", b =>
                 {
-                    b.Navigation("Commons");
-
                     b.Navigation("Details");
                 });
 #pragma warning restore 612, 618

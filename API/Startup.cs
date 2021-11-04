@@ -95,6 +95,7 @@ namespace API
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project Skeleton V1");
                     c.RoutePrefix = "doc";
+                    c.DefaultModelsExpandDepth(-1);
                 });
             }
 

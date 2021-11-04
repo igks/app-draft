@@ -9,7 +9,7 @@
 //===================================================
 namespace API.DTO
 {
-    public class UserInput
+    public class UserIn
     {
         public int? Id { get; set; }
 
@@ -17,7 +17,7 @@ namespace API.DTO
         public string Password { get; set; }
     }
 
-    public class UserOutput
+    public class UserOut
     {
         public int Id { get; set; }
 

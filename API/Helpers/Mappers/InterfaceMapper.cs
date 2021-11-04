@@ -19,6 +19,8 @@ namespace API.Helpers.Mappers
         {
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<IAuthRepo, AuthRepo>();
+            services.AddScoped<IMasterRepo, MasterRepo>();
+            services.AddScoped<ICommonRepo, CommonRepo>();
         }
     }
 }
