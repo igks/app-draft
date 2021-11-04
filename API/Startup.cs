@@ -102,8 +102,10 @@ namespace API
             app.UseRouting();
 
             app.UseAuthentication();
-
             app.UseAuthorization();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
@@ -111,6 +113,8 @@ namespace API
                     endpoints.MapControllers().WithMetadata(new AllowAnonymousAttribute());
                 else
                     endpoints.MapControllers();
+
+                endpoints.MapControllerRoute("SPA", "*{url}", defaults: new { controllers = "SPA", action = "Index" });
             });
         }
     }
