@@ -1,24 +1,21 @@
 //===================================================
 // Date         : 04 Nov 2021
 // Author       : I Gusti Kade Sugiantara
-// Description  : Application entry point
+// Description  : Private router component
 //===================================================
 // Revision History:
 // Name             Date            Description
 //
 //===================================================
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
+import { Route, Redirect } from "react-router-dom";
 
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+const PrivateRoute = ({ component: Component, auth, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) =>
+      !auth ? <Redirect to="/login" /> : <Component {...props} />
+    }
+  />
 );
+export default PrivateRoute;

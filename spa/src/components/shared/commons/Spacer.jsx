@@ -1,24 +1,17 @@
 //===================================================
 // Date         : 04 Nov 2021
 // Author       : I Gusti Kade Sugiantara
-// Description  : Application entry point
+// Description  : Shared component for give a space between a component.
 //===================================================
 // Revision History:
 // Name             Date            Description
 //
 //===================================================
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
+import { Box } from "@mui/material";
 
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
+const Spacer = ({ width = 0, height = 0 }) => {
+  return <Box sx={{ width: width, height: height }} />;
+};
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+export default Spacer;

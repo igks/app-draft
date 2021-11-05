@@ -1,24 +1,21 @@
 //===================================================
 // Date         : 04 Nov 2021
 // Author       : I Gusti Kade Sugiantara
-// Description  : Application entry point
+// Description  : Shared component to show error message.
 //===================================================
 // Revision History:
 // Name             Date            Description
 //
 //===================================================
-import store from "./redux/store";
-import { Provider } from "react-redux";
-import EntryRoute from "./navigations/EntryRoute";
-import CustomAlert from "./components/shared/commons/CustomAlert";
+import React from "react";
+import { Typography } from "@mui/material";
 
-const App = () => {
+const ErrorMessage = ({ message }) => {
   return (
-    <Provider store={store}>
-      <EntryRoute />
-      <CustomAlert />
-    </Provider>
+    <Typography variant="body1" sx={{ color: "red", margin: 0, padding: 0 }}>
+      <small>{message}</small>
+    </Typography>
   );
 };
 
-export default App;
+export default ErrorMessage;
