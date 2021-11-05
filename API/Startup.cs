@@ -14,6 +14,10 @@ using Microsoft.AspNetCore.Authorization;
 using FluentValidation.AspNetCore;
 using API.Validations;
 using API.Models;
+using Hangfire;
+using Hangfire.SqlServer;
+using System;
+using Hangfire.Dashboard;
 
 namespace API
 {
@@ -50,6 +54,7 @@ namespace API
             services.Configure<Security>(options => Configuration.GetSection("Security").Bind(options));
             services.Configure<ServerConfig>(options => Configuration.GetSection("ServerConfig").Bind(options));
             services.Configure<SystemConfig>(options => Configuration.GetSection("SystemConfig").Bind(options));
+            services.Configure<SmtpConfig>(options => Configuration.GetSection("SmtpConfig").Bind(options));
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -72,6 +77,20 @@ namespace API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
+
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(Configuration.GetConnectionString("QueueJobConnection"), new SqlServerStorageOptions
+                {
+                    CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                    SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                    QueuePollInterval = TimeSpan.Zero,
+                    UseRecommendedIsolationLevel = true,
+                    DisableGlobalLocks = true
+                }));
+            services.AddHangfireServer();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -98,6 +117,15 @@ namespace API
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
+            app.UseHangfireDashboard(
+                    "/services", new DashboardOptions()
+                    {
+                        Authorization = new[] { new AllowAllDashboardAuthorizationFilter() },
+                        IsReadOnlyFunc = (DashboardContext context) => true,
+                        AppPath = "#"
+                    }
+                );
+
             app.UseEndpoints(endpoints =>
             {
                 if (!Configuration.GetValue<bool>("SystemConfig:EnableAuthorization"))
@@ -106,7 +134,16 @@ namespace API
                     endpoints.MapControllers();
 
                 endpoints.MapControllerRoute("SPA", "*{url}", defaults: new { controllers = "SPA", action = "Index" });
+                endpoints.MapHangfireDashboard("/services");
             });
+        }
+
+        public class AllowAllDashboardAuthorizationFilter : IDashboardAuthorizationFilter
+        {
+            public bool Authorize(DashboardContext context)
+            {
+                return true;
+            }
         }
     }
 }

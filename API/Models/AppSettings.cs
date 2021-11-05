@@ -8,6 +8,8 @@
 //                          		        		    
 //===================================================
 
+using MailKit.Security;
+
 namespace API.Models
 {
     public class Security
@@ -25,5 +27,15 @@ namespace API.Models
         public int Version { get; set; }
         public bool EnableAuthentication { get; set; }
         public bool EnableAuthorization { get; set; }
+    }
+
+    public class SmtpConfig
+    {
+        public string Host { get; set; }
+        public int Port { get; set; }
+        public SecureSocketOptions Security { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Sender { get; set; }
     }
 }
