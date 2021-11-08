@@ -98,14 +98,15 @@ namespace API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project Skeleton V1");
-                    c.RoutePrefix = "doc";
-                    c.DefaultModelsExpandDepth(-1);
-                });
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project Skeleton V1");
+                c.RoutePrefix = "doc";
+                c.DefaultModelsExpandDepth(-1);
+            });
 
             app.UseCors(CustomCORS);
 
@@ -117,14 +118,12 @@ namespace API
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.UseHangfireDashboard(
-                    "/services", new DashboardOptions()
-                    {
-                        Authorization = new[] { new AllowAllDashboardAuthorizationFilter() },
-                        IsReadOnlyFunc = (DashboardContext context) => true,
-                        AppPath = "#"
-                    }
-                );
+            app.UseHangfireDashboard("/services", new DashboardOptions()
+            {
+                Authorization = new[] { new AllowAllDashboardAuthorizationFilter() },
+                IsReadOnlyFunc = (DashboardContext context) => true,
+                AppPath = "#"
+            });
 
             app.UseEndpoints(endpoints =>
             {

@@ -50,7 +50,7 @@ const Login = () => {
             variant="h2"
             sx={{ color: "white", fontSize: 30, fontWeight: "bold" }}
           >
-            e-DHR
+            Application Title
           </Typography>
         </Box>
       </Box>

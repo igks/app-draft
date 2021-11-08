@@ -10,6 +10,8 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavigationRoute from "../navigations/NavigationRoute";
 import Login from "../pages/authentication/Login";
+import MasterForm from "../pages/master/MasterForm";
+import MasterList from "../pages/master/MasterList";
 
 const EntryRoute = () => {
   return (
@@ -18,6 +20,8 @@ const EntryRoute = () => {
         <Switch>
           <Route exact path="/" component={Login} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/master" component={MasterList} />
+          <Route exact path="/master-form" component={MasterForm} />
           <Route component={NavigationRoute} />
         </Switch>
       </Router>

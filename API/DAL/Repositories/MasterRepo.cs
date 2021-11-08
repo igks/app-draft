@@ -56,6 +56,7 @@ namespace API.DAL.Repositories
             var columnsMap = new Dictionary<string, Expression<Func<Master, object>>>()
             {
                 ["masterproperty1"] = x => x.MasterProperty1,
+                ["masterproperty2"] = x => x.MasterProperty2,
             };
 
             masters = masters.ApplyOrdering(parameter, columnsMap);

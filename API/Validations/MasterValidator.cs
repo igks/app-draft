@@ -28,7 +28,7 @@ namespace API.Validations
 
             RuleFor(x => x)
                 .Must(x => !Duplicate(x))
-                .WithName("Field 1")
+                .WithName("masterProperty1")
                 .WithMessage("Record already exist");
 
             RuleForEach(x => x.Details).SetValidator(new DetailValidator(_context));
