@@ -15,6 +15,7 @@ namespace API.DAL.Interfaces
 {
     public interface IAuthRepo
     {
-        Task<User> Login(string username, string password);
+        Task<AuthenticatedUser> Login(string username, string password);
+        void Register(User user, string password);
     }
 }

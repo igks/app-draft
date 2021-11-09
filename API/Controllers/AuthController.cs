@@ -31,15 +31,13 @@ namespace API.Controllers
         private readonly IMapper _mapper;
         private readonly IAuthRepo _authRepo;
 
-        public readonly Security _security;
 
         private readonly ServerConfig _serverConfig;
 
-        public AuthController(IMapper mapper, IAuthRepo authRepo, IOptions<Security> security, IOptions<ServerConfig> serverConfig)
+        public AuthController(IMapper mapper, IAuthRepo authRepo, IOptions<ServerConfig> serverConfig)
         {
             _mapper = mapper;
             _authRepo = authRepo;
-            _security = security.Value;
             _serverConfig = serverConfig.Value;
         }
 
@@ -49,11 +47,10 @@ namespace API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userLogin = await _authRepo.Login(dto.Username, dto.Password);
-            if (userLogin == null)
+            var result = await _authRepo.Login(dto.Username, dto.Password);
+            if (result == null)
                 return BadRequest("Credential invalid or account is unregistered!");
 
-            var result = TokenHandler(userLogin);
             return Ok(result);
         }
 
@@ -94,37 +91,16 @@ namespace API.Controllers
             return Ok();
         }
 
-        private object TokenHandler(User user)
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] UserIn dto)
         {
-            var userId = user.Id.ToString();
-            var userName = user.Username;
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var claims = new List<Claim>();
-            claims.Add(new Claim("Id", userId));
-            claims.Add(new Claim("Username", userName));
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(_security.JWTSecretToken));
-
-            var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-            var timeExpire = DateTime.Now.AddDays(1);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = timeExpire,
-                SigningCredentials = credential
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var userData = _mapper.Map<UserOut>(user);
-
-            return new
-            {
-                Token = tokenHandler.WriteToken(token),
-                Expired = timeExpire,
-                user
-            };
+            var user = _mapper.Map<UserIn, User>(dto);
+            var password = dto.Password;
+            _authRepo.Register(user, password);
+            return Ok("Register success");
         }
     }
 }
